@@ -19,17 +19,16 @@ body {
 
 .container {
   text-align: center;
-  padding: 20px;
 }
 
 h1 {
-  font-size: 2rem;
   color: #ff4d6d;
+  font-size: 2rem;
 }
 
 button {
   font-size: 1.2rem;
-  padding: 12px 25px;
+  padding: 14px 28px;
   margin: 15px;
   border: none;
   border-radius: 12px;
@@ -38,17 +37,18 @@ button {
 }
 
 #yes {
-  background-color: #ff4d6d;
+  background: #ff4d6d;
   color: white;
 }
 
 #no {
-  background-color: #aaa;
+  background: #aaa;
   position: absolute;
+  touch-action: manipulation;
 }
 
 img {
-  max-width: 250px;
+  max-width: 260px;
   margin-top: 15px;
   border-radius: 12px;
 }
@@ -67,71 +67,67 @@ img {
 </div>
 
 <script>
-const noButton = document.getElementById("no");
-const yesButton = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
 const gifContainer = document.getElementById("gifContainer");
 const question = document.getElementById("question");
 
-let noClicks = 0;
-let showedFive = false;
-let showedEight = false;
+let noCount = 0;
 let yesScale = 1;
 
-// Move NO button
-function moveNoButton() {
-  const x = Math.random() * (window.innerWidth - noButton.offsetWidth);
-  const y = Math.random() * (window.innerHeight - noButton.offsetHeight);
+// Move button safely
+function moveNo() {
+  const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+  const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
 
-  noButton.style.left = `${x}px`;
-  noButton.style.top = `${y}px`;
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 }
 
-// Desktop hover movement
-noButton.addEventListener("mouseenter", moveNoButton);
+// Reliable click handler
+function handleNoClick(e) {
+  e.preventDefault();
 
-// Reliable tap/click detection
-noButton.addEventListener("pointerdown", () => {
+  noCount++;
 
-  noClicks++;
+  // Grow YES button
+  yesScale += 0.12;
+  yesBtn.style.transform = `scale(${yesScale})`;
 
-  // Grow YES button slightly every No press 😄
-  yesScale += 0.1;
-  yesButton.style.transform = `scale(${yesScale})`;
+  // ---- EXACTLY at 5 ----
+  if (noCount === 5) {
+    question.innerHTML = "Hmm… are you sure? 😭";
 
-  // ----- After 5 clicks -----
-  if (noClicks >= 5 && !showedFive) {
-    showedFive = true;
-
-    question.innerHTML = "Okay that's getting suspicious 😭";
-
-    gifContainer.innerHTML = `
-      <img src="https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif">
-    `;
+    gifContainer.innerHTML =
+      '<img src="https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif">';
   }
 
-  // ----- After 8 clicks -----
-  if (noClicks >= 8 && !showedEight) {
-    showedEight = true;
+  // ---- EXACTLY at 8 ----
+  if (noCount === 8) {
+    question.innerHTML = "Okay okay… just press YES once 😌💘";
 
-    question.innerHTML = "Alright… just press YES once 😌💘";
-
-    gifContainer.innerHTML = `
-      <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
-    `;
+    gifContainer.innerHTML =
+      '<img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">';
   }
 
-  moveNoButton();
-});
+  // Move AFTER short delay (important fix)
+  setTimeout(moveNo, 150);
+}
+
+// Works for mobile + desktop
+noBtn.addEventListener("click", handleNoClick);
+
+// Also dodge cursor on desktop hover
+noBtn.addEventListener("mouseenter", moveNo);
 
 // YES clicked
-yesButton.addEventListener("click", () => {
-
+yesBtn.addEventListener("click", () => {
   document.body.innerHTML = `
-    <div style="text-align:center; padding:40px;">
+    <div style="text-align:center;padding:40px;">
       <h1 style="color:#ff4d6d;">
         YAYYYY 💕💘 <br> Best decision ever 😌
       </h1>
-      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" style="max-width:300px;">
+      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
     </div>
   `;
 });
