@@ -16,7 +16,6 @@ body {
   font-family: Arial, sans-serif;
   overflow: hidden;
   user-select: none;
-  -webkit-user-select: none;
 }
 
 .container {
@@ -36,7 +35,6 @@ button {
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.25s ease;
-  user-select: none;
 }
 
 #yes {
@@ -47,7 +45,6 @@ button {
 #no {
   background: #aaa;
   position: absolute;
-  touch-action: none;
 }
 
 img {
@@ -69,6 +66,71 @@ img {
   <div id="gifContainer"></div>
 </div>
 
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const question = document.getElementById("question");
+const gifContainer = document.getElementById("gifContainer");
+
+let noCount = 0;
+let yesScale = 1;
+
+/* ---------- Move NO button ---------- */
+function moveNo() {
+  const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+  const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+/* ---------- Detect taps BEFORE button moves ---------- */
+document.addEventListener("pointerdown", (e) => {
+
+  // Check if NO button was tapped
+  if (e.target === noBtn) {
+
+    noCount++;
+
+    // Grow YES button
+    yesScale += 0.12;
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    if (noCount === 5) {
+      question.innerHTML = "Hmm… are you sure? 😭";
+      gifContainer.innerHTML =
+        '<img src="https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif">';
+    }
+
+    if (noCount === 8) {
+      question.innerHTML = "Okay okay… just press YES once 😌💘";
+      gifContainer.innerHTML =
+        '<img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">';
+    }
+
+    // Move AFTER tap registered
+    requestAnimationFrame(moveNo);
+  }
+});
+
+/* Desktop hover dodge */
+noBtn.addEventListener("mouseenter", moveNo);
+
+/* YES clicked */
+yesBtn.addEventListener("click", () => {
+  document.body.innerHTML = `
+    <div style="text-align:center;padding:40px;">
+      <h1 style="color:#ff4d6d;">
+        YAYYYY 💕💘 <br> Best decision ever 😌
+      </h1>
+      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
+    </div>
+  `;
+});
+</script>
+
+</body>
+</html>
 <script>
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
