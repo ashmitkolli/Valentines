@@ -1,137 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Valentine 💘</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine?</title>
 
-    body {
-      height: 100vh;
-      margin: 0;
-      background: linear-gradient(135deg, #ff758c, #ff7eb3);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "Segoe UI", sans-serif;
-      overflow: hidden;
-    }
+<style>
+body {
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffe6eb;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
 
-    .card {
-      background: white;
-      padding: 40px 50px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      max-width: 400px;
-    }
+.container {
+  text-align: center;
+  padding: 20px;
+}
 
-    h1 {
-      color: #ff4d6d;
-      font-size: 2.3rem;
-      margin-bottom: 10px;
-    }
+h1 {
+  font-size: 2rem;
+  color: #ff4d6d;
+}
 
-    p {
-      color: #555;
-      font-size: 1.1rem;
-      min-height: 1.4em;
-    }
+button {
+  font-size: 1.2rem;
+  padding: 12px 25px;
+  margin: 15px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
 
-    .buttons {
-      margin-top: 30px;
-    }
+#yes {
+  background-color: #ff4d6d;
+  color: white;
+}
 
-    button {
-      font-size: 1.2rem;
-      padding: 12px 28px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+#no {
+  background-color: #aaa;
+  position: absolute;
+}
 
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-
-    #yes {
-      background: #ff4d6d;
-      color: white;
-    }
-
-    #no {
-      background: #ccc;
-      color: #333;
-      position: absolute;
-    }
-
-    .final {
-      font-size: 2.2rem;
-      color: #ff4d6d;
-    }
-  </style>
+img {
+  max-width: 250px;
+  margin-top: 15px;
+  border-radius: 12px;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="card" id="card">
-    <h1>Will you be my Valentine? 💖</h1>
-    <p id="message"></p>
+<div class="container">
+  <h1 id="question">Will you be my Valentine? 💖</h1>
 
-    <div class="buttons">
-      <button id="yes">Yes 💕</button>
-      <button id="no">No 😶</button>
+  <button id="yes">Yes</button>
+  <button id="no">No</button>
+
+  <div id="gifContainer"></div>
+</div>
+
+<script>
+const noButton = document.getElementById("no");
+const yesButton = document.getElementById("yes");
+const gifContainer = document.getElementById("gifContainer");
+const question = document.getElementById("question");
+
+let noClicks = 0;
+
+// --- Move NO button (mobile + desktop)
+function moveNoButton() {
+  const x = Math.random() * (window.innerWidth - noButton.offsetWidth);
+  const y = Math.random() * (window.innerHeight - noButton.offsetHeight);
+
+  noButton.style.left = `${x}px`;
+  noButton.style.top = `${y}px`;
+}
+
+// Hover for desktop
+noButton.addEventListener("mouseover", moveNoButton);
+
+// Tap for mobile
+noButton.addEventListener("click", () => {
+  noClicks++;
+
+  moveNoButton();
+
+  // After 5 clicks
+  if (noClicks === 5) {
+    question.innerHTML = "Okay that's getting suspicious 😭";
+
+    gifContainer.innerHTML = `
+      <img src="https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif">
+    `;
+  }
+
+  // After 8 clicks
+  if (noClicks === 8) {
+    question.innerHTML = "Alright… just press YES once 😌💘";
+
+    gifContainer.innerHTML = `
+      <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
+    `;
+  }
+});
+
+// YES clicked
+yesButton.addEventListener("click", () => {
+  document.body.innerHTML = `
+    <div style="text-align:center; padding:40px;">
+      <h1 style="color:#ff4d6d;">
+        YAYYYY 💕💘 <br> Best decision ever 😌
+      </h1>
+      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" style="max-width:300px;">
     </div>
-  </div>
+  `;
+});
+</script>
 
-  <script>
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const message = document.getElementById("message");
-    const card = document.getElementById("card");
-
-    let noCount = 0;
-
-    noBtn.addEventListener("mouseover", () => {
-      noCount++;
-
-      const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-      const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top = `${y}px`;
-
-      if (noCount === 5) {
-        message.textContent = "😂 Okay wow, you’re REALLY trying to say no.";
-      }
-
-      if (noCount === 8) {
-        message.textContent = "Alright alright… just click YES once 🙄💘";
-      }
-    });
-
-    yesBtn.addEventListener("click", () => {
-      card.innerHTML = `
-        <div class="final">
-          YAYYYYY 💕🥰<br>
-          Best choice ever 💘
-        </div>
-      `;
-    });
-  </script>
-
-</body>
-</html>    function yesClicked() {
-      document.body.innerHTML = `
-        <h1 style="color:#ff4d6d; text-align:center;">
-          YAYYY 💕💘<br>
-          Best decision ever 😌
-        </h1>
-      `;
-    }
-  </script>
 </body>
 </html>
