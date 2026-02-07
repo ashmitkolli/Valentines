@@ -15,6 +15,8 @@ body {
   background: #ffe6eb;
   font-family: Arial, sans-serif;
   overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .container {
@@ -33,8 +35,118 @@ button {
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.25s ease;
+  user-select: none;
 }
+
+#yes {
+  background: #ff4d6d;
+  color: white;
+}
+
+#no {
+  background: #aaa;
+  position: absolute;
+  touch-action: none;
+}
+
+img {
+  max-width: 260px;
+  margin-top: 15px;
+  border-radius: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1 id="question">Will you be my Valentine? 💖</h1>
+
+  <button id="yes">Yes</button>
+  <button id="no">No</button>
+
+  <div id="gifContainer"></div>
+</div>
+
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const gifContainer = document.getElementById("gifContainer");
+const question = document.getElementById("question");
+
+let noCount = 0;
+let yesScale = 1;
+let locked = false;
+
+// Move NO button
+function moveNo() {
+  const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+  const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+// Main handler (touch + click safe)
+function handleNo() {
+
+  if (locked) return;
+  locked = true;
+
+  noCount++;
+
+  // Grow YES
+  yesScale += 0.12;
+  yesBtn.style.transform = `scale(${yesScale})`;
+
+  if (noCount === 5) {
+    question.innerHTML = "Hmm… are you sure? 😭";
+
+    gifContainer.innerHTML =
+      '<img src="https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif">';
+  }
+
+  if (noCount === 8) {
+    question.innerHTML = "Okay okay… just press YES once 😌💘";
+
+    gifContainer.innerHTML =
+      '<img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">';
+  }
+
+  setTimeout(() => {
+    moveNo();
+    locked = false;
+  }, 150);
+}
+
+/* Mobile touch */
+noBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  handleNo();
+});
+
+/* Desktop click */
+noBtn.addEventListener("click", handleNo);
+
+/* Desktop hover dodge */
+noBtn.addEventListener("mouseenter", moveNo);
+
+// YES clicked
+yesBtn.addEventListener("click", () => {
+  document.body.innerHTML = `
+    <div style="text-align:center;padding:40px;">
+      <h1 style="color:#ff4d6d;">
+        YAYYYY 💕💘 <br> Best decision ever 😌
+      </h1>
+      <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
+    </div>
+  `;
+});
+</script>
+
+</body>
+</html>}
 
 #yes {
   background: #ff4d6d;
